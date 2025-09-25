@@ -2,47 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>可乐雪碧模拟器</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
             display: flex;
-            justify-content: space-around;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin: 20px 0;
+            margin: 10px 0;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                justify-content: space-around;
+                max-width: 800px;
+                gap: 0;
+            }
         }
 
         .cup {
-            width: 150px;
-            height: 300px;
+            width: 120px;
+            height: 240px;
             border-radius: 10px;
             background-color: white;
             border: 2px solid #ccc;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-            padding: 10px;
-            overflow: hidden;
-            margin: 0 20px;
             display: grid;
             grid-template-columns: repeat(5, 1fr); /* 5列 */
-            grid-gap: 2px; /* 设置方块之间的间隔 */
+            grid-gap: 1px; /* 设置方块之间的间隔 */
+            padding: 8px;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        @media (min-width: 768px) {
+            .cup {
+                width: 150px;
+                height: 300px;
+                padding: 10px;
+                grid-gap: 2px;
+                margin: 0 20px;
+            }
         }
 
         .block {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .block {
+                width: 20px;
+                height: 20px;
+                border-radius: 3px;
+            }
         }
 
         .coke {
@@ -54,33 +87,72 @@
         }
 
         .selected {
-            outline: 2px solid red;
+            outline: 3px solid red;
+            outline-offset: 1px;
+        }
+
+        @media (max-width: 767px) {
+            .selected {
+                outline: 2px solid red;
+                outline-offset: 0;
+            }
         }
 
         .label {
             text-align: center;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
             color: #555;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .label {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
         }
 
         .control-buttons {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: center;
             align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .control-buttons {
+                flex-direction: column;
+                gap: 0;
+            }
         }
 
         .control-buttons button {
-            font-size: 16px;
-            padding: 10px 20px;
-            margin: 10px 0;
+            font-size: 14px;
+            padding: 12px 16px;
+            margin: 0;
             background: linear-gradient(135deg, #6e9acb, #5679d1);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             transition: background 0.3s ease;
+            touch-action: manipulation;
+            min-height: 44px;
+            flex: 1;
+        }
+
+        @media (min-width: 768px) {
+            .control-buttons button {
+                font-size: 16px;
+                padding: 10px 20px;
+                margin: 10px 0;
+                border-radius: 5px;
+                min-height: auto;
+                flex: none;
+            }
         }
 
         .control-buttons button:hover {
@@ -88,15 +160,27 @@
         }
 
         .control-panel button {
-            font-size: 16px;
-            padding: 10px 15px;
-            margin: 10px;
+            font-size: 14px;
+            padding: 12px 16px;
+            margin: 5px;
             background: linear-gradient(135deg, #ff9a9e, #f6a09f);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             transition: background 0.3s ease;
+            touch-action: manipulation;
+            min-height: 44px;
+        }
+
+        @media (min-width: 768px) {
+            .control-panel button {
+                font-size: 16px;
+                padding: 10px 15px;
+                margin: 10px;
+                border-radius: 5px;
+                min-height: auto;
+            }
         }
 
         .control-panel button:hover {
@@ -108,12 +192,82 @@
             border: 2px dashed #5679d1;
             background-color: rgba(86, 121, 209, 0.2);
             pointer-events: none;
+            z-index: 1000;
         }
 
         .control-panel {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .control-panel {
+                margin-top: 20px;
+                max-width: 800px;
+            }
+        }
+
+        /* 移动端专用样式 */
+        @media (max-width: 767px) {
+            * {
+                -webkit-tap-highlight-color: transparent;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            
+            .block {
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+            }
+            
+            .cup-container {
+                margin: 15px 0;
+            }
+            
+            .control-buttons {
+                margin: 15px 0;
+            }
+            
+            body {
+                overflow-x: hidden;
+            }
+        }
+        
+        /* 提升按钮在移动端的可点击性 */
+        button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        /* 杯子容器 */
+        .cup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 底部版权信息 */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            padding: 10px;
+        }
+        
+        @media (max-width: 767px) {
+            .footer {
+                margin-top: 20px;
+                font-size: 12px;
+                padding: 8px;
+            }
         }
 
     </style>
@@ -121,7 +275,7 @@
 <body>
 
 <div class="container">
-    <div>
+    <div class="cup-container">
         <div class="label">可乐杯</div>
         <div class="cup" id="cokeCup"></div>
     </div>
@@ -136,7 +290,7 @@
         </button>
     </div>
 
-    <div>
+    <div class="cup-container">
         <div class="label">雪碧杯</div>
         <div class="cup" id="spriteCup"></div>
     </div>
@@ -145,6 +299,10 @@
 <div class="control-panel">
     <button onclick="randomMixBoth()">随机混合</button>
     <button onclick="arrange()">按顺序排列</button>
+</div>
+
+<div class="footer">
+    @孙维刚教育研究院
 </div>
 
 <script>
@@ -172,9 +330,15 @@ function initialize() {
         spriteCup.appendChild(block);
     }
 
+    // 添加鼠标事件
     document.addEventListener('mousedown', startSelection);
     document.addEventListener('mousemove', moveSelection);
     document.addEventListener('mouseup', endSelection);
+    
+    // 添加触摸事件支持
+    document.addEventListener('touchstart', handleTouchStart, {passive: false});
+    document.addEventListener('touchmove', handleTouchMove, {passive: false});
+    document.addEventListener('touchend', handleTouchEnd, {passive: false});
 }
 
 // 切换单个方块的选中状态
@@ -302,6 +466,61 @@ function arrange() {
     cokeBlocks.forEach(block => cokeCup.appendChild(block));
     spriteBlocks.forEach(block => spriteCup.appendChild(block));
 }
+
+// 触摸事件处理函数
+function handleTouchStart(event) {
+    if (event.touches.length === 1) {
+        const touch = event.touches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        
+        if (target && target.classList.contains('block')) {
+            // 直接点击方块时，切换选择状态
+            event.preventDefault();
+            toggleSelect(target);
+        } else {
+            // 开始框选
+            const fakeEvent = {
+                pageX: touch.pageX,
+                pageY: touch.pageY,
+                target: target
+            };
+            startSelection(fakeEvent);
+        }
+    }
+}
+
+function handleTouchMove(event) {
+    if (event.touches.length === 1 && isSelecting) {
+        event.preventDefault();
+        const touch = event.touches[0];
+        const fakeEvent = {
+            pageX: touch.pageX,
+            pageY: touch.pageY
+        };
+        moveSelection(fakeEvent);
+    }
+}
+
+function handleTouchEnd(event) {
+    event.preventDefault();
+    endSelection();
+}
+
+// 防止双击缩放
+document.addEventListener('touchstart', function(event) {
+    if (event.touches.length > 1) {
+        event.preventDefault();
+    }
+}, {passive: false});
+
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function(event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
 
 // 初始化杯子内容
 initialize();
